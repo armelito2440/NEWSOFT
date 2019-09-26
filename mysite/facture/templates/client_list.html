@@ -1,0 +1,55 @@
+{% extends 'baseSocle.html' %}
+ {% load crispy_forms_tags %}
+
+{% block content%}
+
+
+<!-- container -->
+	<div class="container">
+
+		<ol class="breadcrumb">
+			<li><a href="/">Accueil</a></li>
+			<li class="active">Liste client</li>
+		</ol>
+
+		<div class="row">
+
+            <!-- Article main content -->
+			<article class="col-sm-8 maincontent">
+				<header class="page-header">
+					<h1 class="page-title"></h1>
+
+
+					<h1>LISTE CLIENT</h1>
+
+				</header>
+				<br>
+                <br>
+
+<!--LISTE CLIENTS-->
+
+ {% for c in clients %}
+<h1>{{ client.client}}</h1>
+
+<h3><a href="{% url 'client_detail' c.id %}">{{ c.nom_societe }}</a><a href="{% url 'client_update_form' c.id %}"><p>EDITER - </a></h3><p><a href="{% url 'client_check_delete' c.id %}">EFFACER</a></p><br><br>
+    <p>Contact client : {{ c.nom_contact_client }}<p>
+    <p>Adresse : {{ c.adresse }}  {{ c.code_postal }} {{ c.ville }}</p>
+	<p>mail : {{ c.email }}</p>
+	<p>Téléphone : {{ c.telephone }}</p>
+    <p>{{ c.siret }}</p>
+    <p>{{ c.rib_iban }}</p>
+    <br>
+{% endfor %}
+
+	<div class="col-lg-4 text-right">
+		<a class="dropdown-item text-center" href="/"><button class="btn btn-default" type="submit">Accueil</button>
+	</div>
+
+    <div class="col-lg-4 text-right">
+		<a class="dropdown-item text-center" href="/client/"><button class="btn btn-default" type="submit">Créer un client</button>
+	</div>
+
+
+		</div>
+	</div>	<!-- /container -->
+        {% endblock %}

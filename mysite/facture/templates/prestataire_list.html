@@ -1,0 +1,60 @@
+{% extends 'baseSocle.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content%}
+
+<!-- ENTETE-->
+<div class="container">
+
+		<ol class="breadcrumb">
+			<li><a href="/">Accueil</a></li>
+			<li class="active">Liste Prestataire</li>
+		</ol>
+
+		<div class="row">
+
+            <!-- Article main content -->
+			<article class="col-sm-8 maincontent">
+				<header class="page-header">
+					<h1 class="page-title"></h1>
+
+					<!--TITRE-->
+					<h1>LISTE PRESTATAIRE</h1>
+
+
+				</header>
+                    <br>
+                    <br>
+
+ <!-- CHAMPS DU FORMULAIRE TYPE PRESTATAIRE-->
+
+
+{% for p in prestataires %}
+<h1>{{ prestataire.prestataire}}</h1>
+
+<h3><a href="{% url 'prestataire_detail' p.id %}">{{ p.nom }}</a> <a href="{% url 'prestataire_update_form' p.id %}"> - EDITER</a></h3><br><!--<a href="{% url 'prestataire_check_delete' p.id %}"> - EFFACER</a></h3>-->
+	<img src="{{ p.logo.url }}" width="220"><br><br>
+    <p>{{ p.adresse }}</p>
+    <p>{{ p.code_postal }}</p>
+	<p>{{ p.email }}</p>
+    <p>{{ p.telephone }}</p>
+    <br>
+    <br>
+    <br>
+{% endfor %}
+
+ <br><br>
+	<div class="col-lg-4 text-right">
+		<a class="dropdown-item text-center" href="/"><button class="btn btn-default" type="submit">Accueil</button>
+	</div>
+
+    <div class="col-lg-4 text-right">
+		<a class="dropdown-item text-center" href="/prestataire/"><button class="btn btn-default" type="submit">Créer un prestataire</button>
+	</div>
+
+	</div>
+	</div>	<!-- /container -->
+
+{% endblock content%}
+

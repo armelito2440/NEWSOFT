@@ -1,0 +1,16 @@
+
+
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{{ form.media }}
+
+{% block content %}
+<div class="form-group col-5">
+<form method="post">
+  {% csrf_token %}
+  {% bootstrap_form form %}
+  <input type="submit" value="Save">
+</form>
+</div>
+{% endblock content %}

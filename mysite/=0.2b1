@@ -1,0 +1,13 @@
+Collecting xhtml2pdf
+Collecting html5lib>=1.0 (from xhtml2pdf)
+  Downloading https://files.pythonhosted.org/packages/a5/62/bbd2be0e7943ec8504b517e62bab011b4946e1258842bc159e5dfde15b96/html5lib-1.0.1-py2.py3-none-any.whl (117kB)
+Requirement already satisfied: six in /home/armel/Bureau/NOUVEAUSOFT/newSoft_INLINE/venv/lib/python3.6/site-packages (from xhtml2pdf)
+Collecting reportlab>=3.0 (from xhtml2pdf)
+  Downloading https://files.pythonhosted.org/packages/9d/11/af34d80a39c024d0c471e13e1491b10a510a824865759ade452d3bf2639c/reportlab-3.5.26-cp36-cp36m-manylinux1_x86_64.whl (2.6MB)
+Collecting pyPdf2 (from xhtml2pdf)
+Collecting Pillow (from xhtml2pdf)
+  Downloading https://files.pythonhosted.org/packages/14/41/db6dec65ddbc176a59b89485e8cc136a433ed9c6397b6bfe2cd38412051e/Pillow-6.1.0-cp36-cp36m-manylinux1_x86_64.whl (2.1MB)
+Collecting webencodings (from html5lib>=1.0->xhtml2pdf)
+  Downloading https://files.pythonhosted.org/packages/f4/24/2a3e3df732393fed8b3ebf2ec078f05546de641fe1b667ee316ec1dcf3b7/webencodings-0.5.1-py2.py3-none-any.whl
+Installing collected packages: webencodings, html5lib, Pillow, reportlab, pyPdf2, xhtml2pdf
+Successfully installed Pillow-6.1.0 html5lib-1.0.1 pyPdf2-1.26.0 reportlab-3.5.26 webencodings-0.5.1 xhtml2pdf-0.2.3

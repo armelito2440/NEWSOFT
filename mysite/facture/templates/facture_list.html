@@ -1,0 +1,71 @@
+{% extends 'baseSocle.html' %}
+{% load crispy_forms_tags %}
+
+{% block content%}
+
+<!-- ENTETE -->
+	<div class="container">
+
+		<ol class="breadcrumb">
+			<li><a href="/">Accueil</a></li>
+			<li class="active">Liste facture</li>
+		</ol>
+
+		<div class="row">
+
+            <!-- Article main content -->
+			<article class="col-sm-8 maincontent">
+				<header class="page-header">
+					<h1 class="page-title"></h1>
+
+
+					<h1>LISTE FACTURE</h1>
+
+				</header>
+				<br>
+                <br>
+
+<!--LISTE FACTURE-->
+
+
+{% for f in factures %}
+<h1>{{ f.facture}}</h1>
+
+    <h3><a href="{% url 'facture_detail' f.id %}">FACTURE {{ f.ref_fact|date:"yW" }} - {{ f.client.nom_societe }}</a> <a href="{% url 'facture_update_form' f.id %}"></h3><p>EDITER - </a><a href="{% url 'facture_check_delete' f.id %}"> EFFACER</a><br><br></p>
+   <!--https://fontawesome.com/-->
+    <p>Type : <strong>{{ f.type_facture }}</strong></p>
+    <p>{{ f.date_debut }}</p>
+    <p>{{ f.prestation }}</p>
+    <p>{{ f.date_echeance }}</p>
+{% endfor %}
+
+<!-- AFFICHAGE PRESTATION -->
+
+ {% for p in prestation %}
+<h1>{{ prestation.prestation}}</h1>
+    <p>{{ p.intitule }}</p>
+    <p>{{ p.date_prestation }}<p>
+    <p>{{ p.descriptif }}</p>
+    <p>{{ p.quantité }}</p>
+    <p>{{ p.prix_unitaire }}</p>
+    <p>{{ p.prix_HT }}</p>
+    <p>{{ p.TVA }}</p>
+    <p>{{ p.prix_TTC }}</p>
+
+
+{% endfor %}
+    <br><br>
+	<div class="col-lg-4 text-right">
+		<a class="dropdown-item text-center" href="/"><button class="btn btn-default" type="submit">Accueil</button>
+	</div>
+
+    <div class="col-lg-4 text-right">
+		<a class="dropdown-item text-center" href="/facture/"><button class="btn btn-default" type="submit">Créer une facture</button>
+	</div>
+
+		</div>
+	</div>	<!-- /container -->
+
+
+{% endblock content%}
+

@@ -1,0 +1,55 @@
+{% comment %} {% extends 'baseSocle.html' %} {% endcomment %}
+
+{% load crispy_forms_tags %}
+
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %} 
+{{ form.media }}
+
+{% block content%}
+
+	<div class="container">
+
+		<ol class="breadcrumb">
+			<li><a href="/">Accueil</a></li>
+			<li class="active">Création Facture</li>
+		</ol>
+
+		<div class="row">
+
+            <!-- Article main content -->
+
+
+				<header class="page-header">
+					<h1 class="page-title"></h1>
+                    <h1>CREER / EDITER / MODIFIER UNE FACTURE</h1>
+				</header>
+
+
+                    <br>
+                    <br>
+
+				<form method="post">
+					{% csrf_token %}
+					{% comment %} {{ form|crispy }} {% endcomment %}
+					{% bootstrap_form form %} 
+					<hr>
+
+					<div class="col-lg-4 text-right">
+
+
+					<button class="btn btn-action" type="submit">Valider</button><br><br><br>
+					</div>
+				</form>
+				<div class="col-lg-4 text-right">
+		            <a class="dropdown-item text-center" href="/facture_list/"><button class="btn btn-default" type="submit">Annuler</button>
+            	</div>
+                <div class="col-lg-4 text-right">
+		            <a class="dropdown-item text-center" href="/"><button class="btn btn-default" type="submit">Accueil</button>
+            	</div>
+		</div>
+	</div>
+	
+{% endblock content%}
+

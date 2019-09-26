@@ -1,0 +1,222 @@
+{% extends 'baseSocle.html' %}
+{% load crispy_forms_tags %}
+{% load mathfilters %}
+
+
+
+{% block content%}
+
+<!--PAGE SUCCESS CREATION FICHE FACTURE-->
+<!-- container -->
+	<div class="container">
+
+		<ol class="breadcrumb">
+			<li><a href="/">Accueil</a></li>
+			<li class="active">Récapitulatif facture</li>
+		</ol>
+
+		<div class="row">
+
+            <!-- Article main content -->
+
+
+				<header class="page-header">
+					<h1 class="page-title"></h1>
+                    <h1>RECAPITULATIF FACTURE</h1>
+
+				</header>
+                <br>
+
+
+
+
+<!-- CREATION DIV IMPRESSION PDF -->
+<div id="printableArea">
+ <h4>{{ object.prestataire.nom }}</h4>
+ <img src="{{ object.prestataire.logo.url }}" width="220">
+ <br>
+ <br>
+<h3>FACTURE {{ object.ref_fact|date:"yW" }} - {{ object.client.nom_societe }}</h3>
+<a href="#">{{ object.client.email }}</a><br><br>
+<p>{{ object.client.adresse }}</p>
+<p>{{ object.client.code_postal }}  {{ object.client.ville }}<br><br>
+<p>Type : <strong>{{ object.type_facture }}</strong></p>
+
+
+
+<!-- CONDITION DU TEXTE D'AFFICHAGE EN FONCTION DU TYPE DE FACTURE-->
+
+
+<!--PONCTUELLE - ENTETE -->
+  {% if "ponctuelle" in object.type_facture %}<strong>Règlement à réception</strong>{% endif %}<br>
+
+<!--MENSUELLE - ENTETE-->
+  {% if "mensuelle" in object.type_facture %}Vous avez opté pour le prélèvement automatique. Vos mensualités seront prélevées vers le <strong>20</strong> de chaque mois.<br>
+  Consultez votre échéancier en bas de page.{% endif %}<br>
+
+
+
+
+  <p><strong>Période concernée : </strong>
+
+  {% if "ponctuelle" in object.type_facture %}<p>Date de la prestation le {{ object.date_debut }}</p>{% endif%}
+  {% if "annuelle" in object.type_facture %}<p> {{ object.date_debut }} au {{ object.date_echeance }}<br>Date d'expiration : <strong>{{ object.date_echeance}}</strong></p>{% endif%}
+  {% if "mensuelle" in object.type_facture %}du{{ object.date_debut }} au {{ object.date_echeance }}</p>{% endif%}
+<br>
+
+
+<!--ANNUELLE - ENTETE-->
+  {% if "annuelle" in object.type_facture %}ATTENTION ! Merci d'effectuer votre paiement AVANT la date d'expiration mentionnée ci-dessus.<br>Merci de votre compréhension<br>{% endif %}
+  <br>
+
+<!--PRESTATION-->
+<h4><strong>PRESTATION</strong></h4>
+
+  <p>Intitulé : {{ object.intitule }}</p>
+  <p>Date prestation : {{ object.date_prestation }}</p>
+  <p>Descriptif : {{ object.descriptif }}</p><br>
+  <p>Quantité : {{ object.quantite }}</p>
+  <p>Prix Unitaire : {{ object.prix_unitaire }}</p>
+  <p>Prix HT : {{object.quantite|mul:object.prix_unitaire}}</p>
+  <p>Taux TVA : {{object.prestataire.TVA|floatformat:2}}
+  <p>Prix TTC : {{object.quantite|mul:object.prix_unitaire|mul:object.prestataire.calc_tva_appli|floatformat:2}}</p>
+  <p>Dont TVA : {{object.quantite|mul:object.prix_unitaire|mul:object.prestataire.calc_tva_seule|floatformat:2}}</p><br>
+<!--PONCTUELLE- FOOTER 1 -->
+{% if "ponctuelle" in object.type_facture %}<p>Merci de votre règlement par chèque à l'ordre de nouveauSoft ou par virement : <br></p>
+<p><strong> IBAN : FR76 3000 3003 5500 0262 0407 720<br>BIC - ADRESSE/SWIFT : SOGEFRPP</strong></p>{% endif %}
+
+
+<!--ANNUELLE-->
+{% if "annuelle" in object.type_facture %}<p>Merci de votre règlement par chèque à l'ordre de nouveauSoft ou par virement : <br></p>
+<p><strong> IBAN : FR76 3000 3003 5500 0262 0407 720<br>BIC - ADRESSE/SWIFT : SOC 00/01/1900</strong></p>{% endif %}
+{% if "annuelle" in object.type_facture %}<p> Nous pouvons également vous proposer le prélèvement mensuel automatique, nous consulter pour activer ce mode de règlement.<br>
+Mensualités en cas de prélèvement mensuel (sans frais) :  {{ object.quantite|mul:object.prix_unitaire|mul:object.prestataire.calc_tva_appli|div:12|floatformat:2}}</p>{% endif %}
+<br>
+
+
+
+<!--PONCTUELLE - FOOTER 2-->
+{% if "ponctuelle" in object.type_facture %}<p>L'équipe de nouveauSoft vous remercie de votre confiance.</p>
+{% endif %}
+
+<!--MENSUELLE - FOOTER 1 -->
+{% if "mensuelle" in object.type_facture %}<p>Votre prochaine échéance : <strong>le {{object.date_echeance}}</strong></p><br>
+
+<br><br><br><br><br><br><br><br>
+
+<!--MENSUELLE - ECHEANCIER-->
+
+<table class="table table-striped table-dark">
+  <thead>
+    <tr>
+      <th scope="col">MOIS</th>
+      <th scope="col">MONTANT</th>
+      <th scope="col">MOIS</th>
+      <th scope="col">MONTANT</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">Janvier</th>
+      <td>{{ object.quantite|mul:object.prix_unitaire|mul:object.prestataire.calc_tva_appli|div:12|floatformat:2 }} € TTC </td>
+      <th scope="row">Juillet</th>
+      <td>{{ object.quantite|mul:object.prix_unitaire|mul:object.prestataire.calc_tva_appli|div:12|floatformat:2 }} € TTC</td>
+    </tr>
+
+    <tr>
+      <th scope="row">Février</th>
+      <td>{{ object.quantite|mul:object.prix_unitaire|mul:object.prestataire.calc_tva_appli|div:12|floatformat:2  }} € TTC</td>
+      <th scope="row">Août</th>
+      <td>{{ object.quantite|mul:object.prix_unitaire|mul:object.prestataire.calc_tva_appli|div:12|floatformat:2 }} € TTC</td>
+    </tr>
+
+    <tr>
+      <th scope="row">Mars</th>
+      <td>{{ object.quantite|mul:object.prix_unitaire|mul:object.prestataire.calc_tva_appli|div:12|floatformat:2 }} € TTC</td>
+      <th scope="row">Septembre</th>
+      <td>{{ object.quantite|mul:object.prix_unitaire|mul:object.prestataire.calc_tva_appli|div:12|floatformat:2 }} € TTC</td>
+    </tr>
+
+    <tr>
+      <th scope="row">Avril</th>
+      <td>{{ object.quantite|mul:object.prix_unitaire|mul:object.prestataire.calc_tva_appli|div:12|floatformat:2 }} € TTC</td>
+      <th scope="row">Octobre</th>
+      <td>{{ object.quantite|mul:object.prix_unitaire|mul:object.prestataire.calc_tva_appli|div:12|floatformat:2 }} € TTC</td>
+    </tr>
+
+    <tr>
+      <th scope="row">Mai</th>
+      <td>{{ object.quantite|mul:object.prix_unitaire|mul:object.prestataire.calc_tva_appli|div:12|floatformat:2 }} € TTC</td>
+      <th scope="row">Novembre</th>
+      <td>{{ object.quantite|mul:object.prix_unitaire|mul:object.prestataire.calc_tva_appli|div:12|floatformat:2 }} € TTC</td>
+    </tr>
+
+    <tr>
+      <th scope="row">Juin</th>
+      <td>{{ object.quantite|mul:object.prix_unitaire|mul:object.prestataire.calc_tva_appli|div:12|floatformat:2 }} € TTC</td>
+      <th scope="row">Décembre</th>
+      <td>{{ object.quantite|mul:object.prix_unitaire|mul:object.prestataire.calc_tva_appli|div:12|floatformat:2 }} € TTC</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>NouveauSoft vous remercie de votre confiance</p><br><br>
+<p>En cas de rejet de votre banque, des frais de 30€ HT vous seront facturés par prélèvement rejeté.<br></p>
+<p class="contrat">Comme prévu dans les termes du contrat, votre abonnement se renouvelle tacitement sauf avis contraire émis de votre part au moins 30 jours avant votre date d'échéance.</p>
+{% endif %}
+<br>
+<br>
+<br>
+
+
+<!--FERMETURE DIV ZONE IMPRESSION -->
+</div>
+
+
+
+
+<!-- BOUTONS : EDITER, IMPRIMER, SUPPRIMER -->
+
+<!-- EDITER / MODIFIER -->
+<div class="col-lg-3 text-right">
+	<a class="dropdown-item text-center" href="{% url 'facture_update_form' facture.id %}"><button class="btn btn-info" type="submit">Editer / Modifier</button>
+</div>
+
+<!-- EXPORTER EN PDF / IMPRIMER -->
+<div class="col-lg-3 text-right">
+  <div class="imprimer">
+
+    {% comment %} <button class="btn btn-success" input id="impression" name="impression" type="submit" onclick="imprimer_page()" value="Exporter en pdf "/>Exporter en PDF / Imprimer</button> <a class="dropdown-item text-center" href="#"> {% endcomment %}
+    <button class="btn btn-success" input id="impression" name="impression" type="submit" onclick="printDiv('printableArea')" value="Exporter en pdf "/>Exporter en PDF / Imprimer</button>
+   </div>
+</div>
+
+
+<div class="col-lg-3 text-right">
+	<a class="dropdown-item text-center" href="{% url 'facture_check_delete' facture.id %}"><button class="btn btn-danger" type="submit">Supprimer</button>
+</div>
+	<div class="col-lg-3 text-right">
+	    <a class="dropdown-item text-center" href="/facture_list/"><button class="btn btn-default" type="submit">Retour à la liste</button>
+	</div>
+</div>
+</div>
+
+
+<!-- CREATION DE LA FONCTION JAVASCRIPT QUI GENERE LE PDF -->
+<script type="text/javascript">
+    window.printDiv = function(printableArea) {
+     var printContents = document.getElementById(printableArea).innerHTML;
+     var originalContents = document.body.innerHTML;
+
+     document.body.innerHTML = printContents;
+
+     window.print();
+
+     document.body.innerHTML = originalContents;
+    }
+	</script>
+
+
+
+{% endblock content%}
+

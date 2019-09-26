@@ -1,0 +1,76 @@
+{% extends 'baseSocle.html' %}
+{% load crispy_forms_tags %}
+
+{% block content%}
+
+<!-- ENTETE -->
+	<div class="container">
+
+		<ol class="breadcrumb">
+			<li><a href="/">Accueil</a></li>
+			<li class="active">Prestataire</li>
+		</ol>
+
+		<div class="row">
+
+            <!-- Article main content -->
+			<article class="col-sm-8 maincontent">
+				<header class="page-header">
+					<h1 class="page-title"></h1>
+
+
+					<h1>PRESTATAIRE</h1>
+
+				</header>
+				<br>
+                <br>
+
+<!---PAGE SUCCESS CREATION FICHE PRESTATAIRE-->
+
+
+<h1></h1>
+    <p><img src="{{ object.logo.url }}" width="220"></p>
+	<br>
+    <p>Nom : {{ object.nom }}</p>
+    <p>Adresse : {{ object.adresse }}</p>
+    <p>Code postal : {{ object.code_postal }}</p>
+    <p>mail : {{ object.email }}</p>
+    <p>Tel : {{ object.telephone }}</p>
+	<p>TVA en % : {{ object.TVA }}</p>
+	<p>Coeff calcul TVA + prix : {{object.calc_tva_appli}}</p>
+	<p>Coeff calcul TVA seule : {{object.calc_tva_seule}}</p>
+<br>
+<br>
+
+
+
+<!--BOUTONS : EDITER, IMPRIMER SUPPRIMER-->
+<div class="col-lg-4 text-right">
+	<a class="dropdown-item text-center" href="{% url 'prestataire_update_form' prestataire.id %}"><button class="btn btn-info" type="submit">Editer / Modifier</button>
+</div>
+
+<!--<div class="col-lg-3 text-right">
+	<a class="dropdown-item text-center" href="#"><button class="btn btn-success" type="submit">Imprimer</button>
+</div>
+
+<div class="col-lg-3 text-right">
+	<a class="dropdown-item text-center" href="{% url 'prestataire_check_delete' prestataire.id %}"><button class="btn btn-danger" type="submit">Supprimer</button>
+</div>-->
+	<div class="col-lg-4 text-right">
+	    <a class="dropdown-item text-center" href="/prestataire_list/"><button class="btn btn-default" type="submit">Retour à la liste</button>
+	</div>
+
+	<div class="col-lg-4 text-right">
+		<a class="dropdown-item text-center" href="/"><button class="btn btn-default" type="submit">Accueil</button>
+	</div>
+</div>
+
+
+	 </div>
+	</div>	<!-- /container --> 
+
+{% endblock content%}
+
+
+
+

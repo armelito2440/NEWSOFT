@@ -1,0 +1,89 @@
+{% extends 'baseSocle.html' %}
+{% load crispy_forms_tags %}
+
+
+
+<!--PAGE SUCCESS CREATION FICHE CLIENT-->
+{% block content%}
+
+<!-- container -->
+	<div class="container">
+
+		<ol class="breadcrumb">
+			<li><a href="/">Accueil</a></li>
+			<li class="active">Client détail</li>
+		</ol>
+
+		<div class="row">
+
+            <!-- Article main content -->
+
+
+				<header class="page-header">
+					<h1 class="Client"></h1>
+                    <h1>CLIENT</h1>
+
+				</header>
+				<br>
+	<!-- CREATION DIV IMPRESSION PDF -->
+<div id="printableArea">
+
+<h1>{{ Client }}</h1>
+
+    <h3><strong>{{ object.nom_societe }}</strong></h3>
+	<p>Contact : {{ object.nom_contact_client }}</p>
+	<br>
+    <p>Adresse : {{ object.adresse }}</p>
+    <p>Code postal : {{ object.code_postal }}</p>
+    <p>Ville : {{ object.ville }}</p><br>
+    <p>Téléphone : {{ object.telephone }}</p>
+    <p>mail :  {{ object.email }}</p>
+	<br>
+    <p> SIRET : <strong>{{ object.siret }}</strong></p>
+    <p>RIB IBAN : <strong>{{ object.rib_iban }}</strong></p>
+    <br>
+	<br>
+
+<!--FERMETURE DIV ZONE IMPRESSION -->
+</div>
+
+
+<!--ZONE DES BOUTONS-->
+<div class="col-lg-3 text-right">
+	<a class="dropdown-item text-center" href="{% url 'client_update_form' client.id %}"><button class="btn btn-info" type="submit">Editer / Modifier</button>
+</div>
+
+<div class="col-lg-3 text-right">
+	<div class="imprimer">
+    <button class="btn btn-success" input id="impression" name="impression" type="submit" onclick="printDiv('printableArea')" value="Exporter en pdf "/>Exporter en PDF / Imprimer</button>
+   </div>
+</div>
+<div class="col-lg-3 text-right">
+	<a class="dropdown-item text-center" href="/client_list/"><button class="btn btn-default" type="submit">Retour à la liste</button>
+</div>
+<div class="col-lg-3 text-right">
+	<a class="dropdown-item text-center" href="{% url 'client_check_delete' client.id %}"><button class="btn btn-danger" type="submit">Supprimer</button>
+</div>
+
+</div>
+</div>
+<!-- CREATION DE LA FONCTION JAVASCRIPT QUI GENERE LE PDF -->
+<script type="text/javascript">
+    window.printDiv = function(printableArea) {
+     var printContents = document.getElementById(printableArea).innerHTML;
+     var originalContents = document.body.innerHTML;
+
+     document.body.innerHTML = printContents;
+
+     window.print();
+
+     document.body.innerHTML = originalContents;
+    }
+	</script>
+
+{% endblock content%}
+
+
+
+
+

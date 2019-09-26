@@ -1,0 +1,44 @@
+{% extends 'baseSocle.html' %}
+{% load crispy_forms_tags %}
+
+{% block content%}
+<!-- container -->
+	<div class="container">
+
+		<ol class="breadcrumb">
+			<li><a href="/">Accueil</a></li>
+			<li class="active">Supprimer Client</li>
+		</ol>
+
+		<div class="row">
+
+            <!-- Article main content -->
+
+
+				 <header class="page-header">
+					<h1 class="page-title"></h1>
+                    <h1>SUPPRIMER UN CLIENT</h1>
+				</header>
+
+
+                    <br>
+                    <br>
+
+				<form method="post">
+					{% csrf_token %}
+					{{ form|crispy }}
+				 <p>Merci de confirmer la suppression de :  "{{ object }}"?</p>
+					<hr>
+
+					<div class="col-lg-4 text-right">
+						<button class="btn btn-action" type="submit">Confirmer</button>
+					</div>
+
+				</form>
+					<div>
+						<a class="dropdown-item text-center" href="/client_list/"><button class="btn btn-default" type="submit">Annuler</button>
+					</div>
+		</div>
+	</div>
+
+{% endblock content%}

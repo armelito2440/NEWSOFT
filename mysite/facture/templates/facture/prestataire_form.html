@@ -1,0 +1,50 @@
+{% extends 'baseSocle.html' %}
+{% load crispy_forms_tags %}
+
+{% block content%}
+
+<!-- container -->
+	<div class="container">
+
+		<ol class="breadcrumb">
+			<li><a href="/">Accueil</a></li>
+			<li class="active">Creation prestataire</li>
+		</ol>
+
+		<div class="row">
+
+            <!-- Article main content -->
+
+
+				<header class="page-header">
+					<h1 class="page-title"></h1>
+                    <h1>CREER / MODIFIER UN PRESTATAIRE</h1>
+				</header>
+
+
+			<!-- AFFICHAGE FORMULAIRE PRESTATAIRE -->
+
+				<form enctype="multipart/form-data" method="POST" action="">
+
+					{% csrf_token %}
+					{{ form|crispy }}
+
+				<div class="col-lg-4 text-right">
+					<button class="btn btn-action" type="submit">Valider</button>
+				</div>
+
+				</form>
+
+                <div class="col-lg-4 text-right">
+		            <a class="dropdown-item text-center" href="/prestataire_list/"><button class="btn btn-default" type="submit">Annuler</button>
+            	</div>
+                <div class="col-lg-4 text-right">
+		            <a class="dropdown-item text-center" href="/"><button class="btn btn-default" type="submit">Accueil</button>
+            	</div>
+		</div>
+	</div>
+
+{% endblock content%}
+
+
+
