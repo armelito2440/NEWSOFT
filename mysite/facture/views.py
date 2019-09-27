@@ -72,7 +72,7 @@ class FactureFilters(BaseFilter):
         'search_text_client': ['client__nom_societe'],
         'search_text_prestataire': ['prestataire__nom'],
         'search_date_facture_gt': {'operator': '__gte', 'fields': ['date_debut']},
-        'search_date_facture_gt': {'operator': '__lte', 'fields': ['date_debut']},
+        'search_date_facture_lt': {'operator': '__lte', 'fields': ['date_debut']},
     }
 
 
