@@ -16,6 +16,7 @@ urlpatterns = [
     path ('facture_detail/<int:pk>',views.FactureView.as_view(), name='facture_detail'),
     path ('facture_update_form/<int:pk>',views.FactureUpdate.as_view(), name='facture_update_form'),
     path ('facture_check_delete/<int:pk>',views.FactureDelete.as_view(), name='facture_check_delete'),
+    path ('pdf/<int:Facture_id>', views.Facture_PDF),
 
    
     
