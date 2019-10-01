@@ -86,50 +86,16 @@ class FactureSearchList(SearchListView):
 
 
 def Facture_PDF(request, Facture_id):
-    facture = get_object_or_404(Facture, id=Facture_id)
-    prixHT = facture.quantite * facture.prix_unitaire
-    prixTTC = prixHT * (1 + facture.prestataire.TVA / 100)
-    dontTVA = prixHT * facture.prestataire.TVA / 100
-    echeance_12 = prixTTC / 12
-    mois_1_echeance = facture.ref_fact.month
-    dict_mois = {
-        "1": "Janvier",
-        "2": "Février",
-        "3": 'Mars',
-        "4": "Avril",
-        "5": "Mai",
-        "6": "Juin",
-        "7": "Juillet",
-        "8": "Aout",
-        "9": "Septembre",
-        "10": "Octobre",
-        "11": "Novembre",
-        "12": "Décembre"
-        }
-    lst_ech=[]    
-    
-    for i in range(12):
-        m = mois_1_echeance + i
-        if m > 12:
-            m -= 12
-        mois = dict_mois[str(m)]   
-        lst_ech.append(mois)
+   
+    context = Facture.pourPDF(request, Facture_id)
 
-
-    context ={
-        'facture': facture,
-        'Prix_HT': prixHT,
-        'Prix_TTC': prixTTC,
-        'DontTVA': dontTVA, 
-        'Echeance_12': echeance_12,
-        'liste_Echeance': lst_ech,
-    }
     html = render_to_string('facture/facture_detail_PDF.html',
                             context)
     response = HttpResponse(content_type = 'application/PDF')
-    response['Content-Disposition'] = 'filename="facture_{}.pdf"'.format(facture.id)
+    response['Content-Disposition'] = 'filename="facture_{}.pdf"'.format(Facture_id)
     weasyprint.HTML(string=html).write_pdf(response)
     return response
+
 
 """CREATION FICHE FACTURE ET AFFICHAGE SUCCESS"""
 

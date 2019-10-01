@@ -9,7 +9,8 @@
 <!-- CREATION DIV IMPRESSION PDF -->
 <div id="printableArea">
  <h4>{{ facture.prestataire.nom }}</h4>
- <img src="{{ facture.prestataire.logo.url }}" width="220">
+ <!-- TODO modifier URL pour qu'elle fonctionne  -->
+ <img src="{% static 'facture.prestataire.logo' %}" width="220">
  <br>
  <br>
 <h3>FACTURE {{ facture.ref_fact|date:"yW" }} - {{ facture.client.nom_societe }}</h3>
@@ -22,25 +23,22 @@
 
 
 <!--PONCTUELLE - ENTETE -->
-  {% if "ponctuelle" in facture.type_facture %}<strong>Règlement à réception</strong>{% endif %}<br>
+  {% if "PONC" in facture.type_facture %}<strong>Règlement à réception</strong>{% endif %}<br>
 
 <!--MENSUELLE - ENTETE-->
-  {% if "mensuelle" in facture.type_facture %}Vous avez opté pour le prélèvement automatique. Vos mensualités seront prélevées vers le <strong>20</strong> de chaque mois.<br>
+  {% if "MENS" in facture.type_facture %}Vous avez opté pour le prélèvement automatique. Vos mensualités seront prélevées vers le <strong>20</strong> de chaque mois.<br>
   Consultez votre échéancier en bas de page.{% endif %}<br>
-
-
-
 
   <p><strong>Période concernée : </strong>
 
-  {% if "ponctuelle" in facture.type_facture %}<p>Date de la prestation le {{ facture.date_debut }}</p>{% endif%}
-  {% if "annuelle" in facture.type_facture %}<p> {{ facture.date_debut }} au {{ facture.date_echeance }}<br>Date d'expiration : <strong>{{ facture.date_echeance}}</strong></p>{% endif%}
-  {% if "mensuelle" in facture.type_facture %}du{{ facture.date_debut }} au {{ facture.date_echeance }}</p>{% endif%}
+  {% if "PONC" in facture.type_facture %}<p>Date de la prestation le {{ facture.date_debut }}</p>{% endif%}
+  {% if "ANNU" in facture.type_facture %}<p> {{ facture.date_debut }} au {{ facture.date_echeance }}<br>Date d'expiration : <strong>{{ facture.date_echeance}}</strong></p>{% endif%}
+  {% if "MENS" in facture.type_facture %}du{{ facture.date_debut }} au {{ facture.date_echeance }}</p>{% endif%}
 <br>
 
 
 <!--ANNUELLE - ENTETE-->
-  {% if "annuelle" in facture.type_facture %}ATTENTION ! Merci d'effectuer votre paiement AVANT la date d'expiration mentionnée ci-dessus.<br>Merci de votre compréhension<br>{% endif %}
+  {% if "ANNU" in facture.type_facture %}ATTENTION ! Merci d'effectuer votre paiement AVANT la date d'expiration mentionnée ci-dessus.<br>Merci de votre compréhension<br>{% endif %}
   <br>
 
 <!--PRESTATION-->
@@ -51,17 +49,17 @@
   <p>Descriptif : {{ facture.descriptif }}</p><br>
   <p>Quantité : {{ facture.quantite }}</p>
   <p>Prix Unitaire : {{ facture.prix_unitaire }}</p>
-  <p>Prix HT : {{Prix_HT}}</p>
+  <p>Prix HT : {{ Prix_HT }}</p>
   <p>Taux TVA : {{facture.prestataire.TVA|floatformat:2}}
   <p>Prix TTC : {{Prix_TTC|floatformat:2}}</p>
   <p>Dont TVA : {{DontTVA|floatformat:2}}</p><br>
 <!--PONCTUELLE- FOOTER 1 -->
-{% if "ponctuelle" in facture.type_facture %}<p>Merci de votre règlement par chèque à l'ordre de nouveauSoft ou par virement : <br></p>
+{% if "PONC" in facture.type_facture %}<p>Merci de votre règlement par chèque à l'ordre de nouveauSoft ou par virement : <br></p>
 <p><strong> IBAN : FR76 3000 3003 5500 0262 0407 720<br>BIC - ADRESSE/SWIFT : SOGEFRPP</strong></p>{% endif %}
 
 
 <!--ANNUELLE-->
-{% if "annuelle" in facture.type_facture %}<p>Merci de votre règlement par chèque à l'ordre de nouveauSoft ou par virement : <br></p>
+{% if "ANNU" in facture.type_facture %}<p>Merci de votre règlement par chèque à l'ordre de nouveauSoft ou par virement : <br></p>
 <p><strong> IBAN : FR76 3000 3003 5500 0262 0407 720<br>BIC - ADRESSE/SWIFT : SOC 00/01/1900</strong></p>
 <p> Nous pouvons également vous proposer le prélèvement mensuel automatique, nous consulter pour activer ce mode de règlement.<br>
 Mensualités en cas de prélèvement mensuel (sans frais) :  {{ Echeance_12|floatformat:2}}</p>{% endif %}
@@ -70,42 +68,48 @@ Mensualités en cas de prélèvement mensuel (sans frais) :  {{ Echeance_12|floa
 
 
 <!--PONCTUELLE - FOOTER 2-->
-{% if "ponctuelle" in facture.type_facture %}<p>L'équipe de nouveauSoft vous remercie de votre confiance.</p>
+{% if "PONC" in facture.type_facture %}<p>L'équipe de nouveauSoft vous remercie de votre confiance.</p>
 {% endif %}
 
 <!--MENSUELLE - FOOTER 1 -->
-{% if "mensuelle" in facture.type_facture %}<p>Votre prochaine échéance : <strong>le {{facture.date_echeance}}</strong></p><br>
+{% if "MENS" in facture.type_facture %}<p>Votre prochaine échéance : <strong>le {{facture.date_echeance}}</strong></p><br>
 
-<br><br><br><br><br><br><br><br>
-
-<!--MENSUELLE - ECHEANCIER-->
-
-<table class="table table-striped table-dark">
-  <thead>
-    <tr>
-      <th scope="col">MOIS</th>
-      <th scope="col">MONTANT</th>
-    </tr>
-  </thead>
-  <tbody>
   
-  {% for m in liste_Echeance %}
-    <tr>
-      <th scope="row">{{ m }}</th>
-      <td>{{ Echeance_12|floatformat:2 }}</td>
-    </tr>
-{% endfor %}
-    
-  </tbody>
-</table>
 
-<p>NouveauSoft vous remercie de votre confiance</p><br><br>
-<p>En cas de rejet de votre banque, des frais de 30€ HT vous seront facturés par prélèvement rejeté.<br></p>
-<p class="contrat">Comme prévu dans les termes du contrat, votre abonnement se renouvelle tacitement sauf avis contraire émis de votre part au moins 30 jours avant votre date d'échéance.</p>
+  <!--MENSUELLE - ECHEANCIER-->
+
+  <table class="table table-striped table-dark">
+    <thead>
+      <tr>
+        <th scope="col">MOIS</th>
+        <th scope="col">MONTANT</th>
+      
+        <th scope="col">MOIS</th>
+        <th scope="col">MONTANT</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+
+      {% for g, d in liste_Echeance %}
+        <tr>
+          <th scope="row">{{ g }}</th>
+          <td>{{ Echeance_12|floatformat:2 }}</td>
+          <th scope="row">{{ d }}</th>
+          <td>{{ Echeance_12|floatformat:2 }}</td>
+        </tr>
+      {% endfor %}
+
+
+      
+    </tbody>
+  </table>
+
+  <p>NouveauSoft vous remercie de votre confiance</p>
+  <p>En cas de rejet de votre banque, des frais de 30€ HT vous seront facturés par prélèvement rejeté.</p>
+  <p class="contrat">Comme prévu dans les termes du contrat, votre abonnement se renouvelle tacitement sauf avis contraire émis de votre part au moins 30 jours avant votre date d'échéance.</p>
 {% endif %}
-<br>
-<br>
-<br>
+
 
 
 <!--FERMETURE DIV ZONE IMPRESSION -->
