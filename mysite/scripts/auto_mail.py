@@ -15,13 +15,11 @@ from facture.models import Facture
 
 def run():
    for facture in Facture.objects.all():
-         print(facture.date_debut)
-         print(datetime.now().date())
-         diff = datetime.now().date() - facture.date_debut
-         diff = diff.days
-                  
-         if datetime.now().date() - timedelta(days=6) == facture.date_debut:
-              print ('message créé')
+       diff = datetime.now().date() - facture.date_debut
+       diff = diff.days
+              
+       if datetime.now().date() - timedelta(days=6) == facture.date_debut:
+       
               # Create Message
               subject = "Facture de Tonton Jean-Luc {}".format(facture.id)
               message = "Votre facture est en pièce jointe"
