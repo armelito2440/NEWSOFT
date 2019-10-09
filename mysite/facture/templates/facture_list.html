@@ -46,6 +46,7 @@
     <p>{{ f.date_debut }}</p>
     <p>{{ f.prestation }}</p>
     <p>{{ f.date_echeance }}</p>
+    <p><a href="{% url 'pdf' f.id %}">Afficher PDF</a> </p>
 {% endfor %}
 
 <!-- AFFICHAGE PRESTATION -->
