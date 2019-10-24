@@ -3,11 +3,12 @@
 {% load bootstrap4 %}
 {% bootstrap_css %}
 
-
-
-
+<head>
+<link rel="stylesheet" href="/static/css/pdf.css">
+</head>
 <!-- CREATION DIV IMPRESSION PDF -->
 <div id="printableArea">
+
  <h4>{{ facture.prestataire.nom }}</h4>
  <!-- TODO modifier URL pour qu'elle fonctionne  -->
  <img src="{% static 'facture.prestataire.logo' %}" width="220">
@@ -73,9 +74,16 @@ Mensualités en cas de prélèvement mensuel (sans frais) :  {{ Echeance_12|floa
 
 <!--MENSUELLE - FOOTER 1 -->
 {% if "MENS" in facture.type_facture %}<p>Votre prochaine échéance : <strong>le {{facture.date_echeance}}</strong></p><br>
-
   
 
+  
+   {% if prem_ech %} 
+    <p> Première échéance le 20 {{ prem_ech }}: {{Echeance_MT|floatformat:2}} &euro;<P>
+    <p> Echéances suivantes:</p>
+
+  {% else %}
+    <p>Echéancier:</p>  
+  {% endif %}
   <!--MENSUELLE - ECHEANCIER-->
 
   <table class="table table-striped table-dark">
@@ -90,17 +98,20 @@ Mensualités en cas de prélèvement mensuel (sans frais) :  {{ Echeance_12|floa
     </thead>
     <tbody>
       
-
+     
       {% for g, d in liste_Echeance %}
         <tr>
-          <th scope="row">{{ g }}</th>
-          <td>{{ Echeance_12|floatformat:2 }}</td>
-          <th scope="row">{{ d }}</th>
-          <td>{{ Echeance_12|floatformat:2 }}</td>
+          <th scope="row">20 {{ g }}</th>
+          <td>{{ Echeance_MT|floatformat:2 }} &euro;</td>
+          <th scope="row">20 {{ d }}</th>
+          <td>{{ Echeance_MT|floatformat:2 }} &euro;</td>
         </tr>
       {% endfor %}
+    
+  
 
 
+      
       
     </tbody>
   </table>

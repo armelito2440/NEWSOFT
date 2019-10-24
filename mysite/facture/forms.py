@@ -1,8 +1,9 @@
 from bootstrap_datepicker_plus import DatePickerInput
 from django import forms
+from django.forms import formset_factory, inlineformset_factory
 from django.conf import settings
 # from .models import Image
-from .models import Prestataire, Facture, Client
+from .models import Prestataire, Facture, Client, PrestToFact
 
 
 class PrestataireForm(forms.ModelForm):
@@ -10,9 +11,15 @@ class PrestataireForm(forms.ModelForm):
         model = Prestataire
         fields = '__all__'
 
-
+ 
 class FactureForm(forms.ModelForm):
+    
+    def __init__(self, *args, **kwargs):
+        super(FactureForm, self).__init__(*args, **kwargs)
+        
+    
     class Meta:
+    
         model = Facture
         fields ='__all__'
         widgets = {
@@ -21,8 +28,13 @@ class FactureForm(forms.ModelForm):
             'date_prestation' : DatePickerInput()
         }
 
-
-
+    def get_form(self):
+        form = super().get_form()
+        form.fields['date_debut'].widget = DatePickerInput().start_of('facture date')
+        form.fields['date_echeance'].widget = DatePickerInput().end_of('facture date')
+        form.fields['date_prestation'].widget = DatePickerInput().end_of('facture date')
+        return form
+    
 class FactureSearchForm(forms.Form):
     # Recherche de factures
     
@@ -59,4 +71,15 @@ class ClientForm(forms.ModelForm):
 
 
 
+class PrestToFactForm(forms.ModelForm):
 
+    class Meta:
+        model = PrestToFact
+        exclude = ()
+       
+
+''' PrestToFactFormset = inlineformset_factory(
+    Facture, PrestToFact, form=PrestToFactForm,
+    fields =['quantite', 'prix_unitaire_HT'],
+    )
+ '''

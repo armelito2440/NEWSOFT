@@ -60,13 +60,25 @@ class Client(models.Model):
             return reverse("client_detail", kwargs={"pk": self.pk})
     
       
+class Prestation(models.Model):
+
+    intitule = models.CharField(max_length=250)
+    descriptif = models.TextField(blank=True, null=True)
+    
+    def get_absolute_url(self):
+        return reverse("prestation", kwargs={"pk": self.pk})
+
+    def __str__(self):
+        return (self.intitule)   
+
+
 
 
 """ 3 - FACTURE"""
 
 class Facture(models.Model):
 
-    # TODO créer une liste de choix pour catégorie facture etc...
+    
     ENTR =[]
     ANNUELLE = 'ANNU'
     MENSUELLE = 'MENS'
@@ -85,16 +97,11 @@ class Facture(models.Model):
     client= models.ForeignKey('Client', on_delete=models.CASCADE)
     prestataire = models.ForeignKey('Prestataire', on_delete=models.CASCADE) 
     ref_fact = models.DateField(default=timezone.now)
-    # type_facture = models.CharField(max_length=50)
     date_debut = models.DateField()
     date_echeance = models.DateField()
-    intitule = models.CharField(max_length=250)
     date_prestation = models.DateField()
-    descriptif = models.TextField(blank=True, null=True)
-    quantite = models.IntegerField (default = 0)
-    prix_unitaire = models.DecimalField(default = 0.00 , max_digits = 18 , decimal_places = 2)
-    prix_HT = models.DecimalField(default = 0.00 , max_digits = 18 , decimal_places = 2 )
-    prix_TTC = models.DecimalField(default = 0.00 , max_digits = 18 , decimal_places = 2)
+    nombre_echeance = models.SmallIntegerField(default=1)
+    
     
 
 
@@ -104,10 +111,11 @@ class Facture(models.Model):
     @classmethod
     def pourPDF(cls, request, Facture_id):
         facture = get_object_or_404(Facture, id=Facture_id)
-        prixHT = facture.quantite * facture.prix_unitaire
+        prixHT = PrestToFact.total_HT(fact=Facture_id)
         prixTTC = prixHT * (1 + facture.prestataire.TVA / 100)
         dontTVA = prixHT * facture.prestataire.TVA / 100
-        echeance_12 = prixTTC / 12
+        echeances_mt = prixTTC / facture.nombre_echeance
+        nombre_echeance = facture.nombre_echeance
         mois_1_echeance = facture.ref_fact.month
         dict_mois = {
             "1": "Janvier",
@@ -124,28 +132,82 @@ class Facture(models.Model):
             "12": "Décembre"
             }
         lst_ech_g = []
-        lst_ech_d = []    
+        lst_ech_d = []
+        lst_ech = []
+        prem_ech=""    
         
-        for i in range(12):
-            m = mois_1_echeance + i
-            if m > 12:
-                m -= 12
-            mois = dict_mois[str(m)]
-            if i < 6:   
-                lst_ech_g.append(mois)
-            else:
-                lst_ech_d.append(mois)
-
-        lst_ech = zip(lst_ech_g, lst_ech_d)
-
+        k=1
+        if facture.nombre_echeance % 2 == 0:
+            n = nombre_echeance // 2
+            for i in range(n): 
+                m_g = mois_1_echeance + i
+                if m_g > 12:
+                    m_g -= 12
+                mois_g = dict_mois[str(m_g)]
+                lst_ech_g.append(mois_g)
+                m_d = m_g + nombre_echeance // 2 
+                if m_d > 12:
+                    m_d -= 12
+                mois_d = dict_mois[str(m_d)]
+                lst_ech_d.append(mois_d)
+            lst_ech = zip(lst_ech_g, lst_ech_d)    
+        else:
+            N = nombre_echeance // 2 + 1
+            for i in range(N): 
+                m_g = mois_1_echeance + i
+                if m_g > 12:
+                    m_g -= 12
+                mois_g = dict_mois[str(m_g)]
+                lst_ech_g.append(mois_g)
+        
+                if k < nombre_echeance // 2 + 1:
+                    m_d = m_g + nombre_echeance // 2 + 1
+                    if m_d > 12:
+                        m_d -= 12
+                    mois_d = dict_mois[str(m_d)]
+                    lst_ech_d.append(mois_d)
+                    k +=1
+            prem_ech = lst_ech_g.pop(0)
+            lst_ech = zip(lst_ech_g, lst_ech_d)
+        
         context ={
             'facture': facture,
             'Prix_HT': prixHT,
             'Prix_TTC': prixTTC,
             'DontTVA': dontTVA, 
-            'Echeance_12': echeance_12,
+            'Echeance_MT': echeances_mt,
             'liste_Echeance': lst_ech,
-            
+            'liste_D': lst_ech_d,
+            'liste_G': lst_ech_g,
+            'prem_ech': prem_ech,
         }
         return context
+        
+class PrestToFact(models.Model):
+    
+    fact = models.ForeignKey(Facture,
+                             related_name="prestations",
+                             on_delete=models.CASCADE)
+    prest = models.ForeignKey(Prestation,
+                              related_name="fact_prestations",
+                              on_delete=models.CASCADE)
+    quantite = models.IntegerField (default = 0, verbose_name='quant')
+    prix_unitaire_HT = models.DecimalField(default = 0.00 , max_digits = 18 , decimal_places = 2)
+    
+    
+    def __str__(self):
+        return '{}'.format(self.id)
+
+    def prix_HT(self):
+        calc = self.quantite * self.prix_unitaire_HT
+        prix_HT = getattr(calc)
+        return prix_HT    
+        
+    @classmethod
+    def total_HT(cls, fact):
+        lst = PrestToFact.objects.all().filter(fact_id=fact)
+        total_HT_Fact = 0
+        total_HT_Fact = sum(p['prix_unitaire_HT'] * p['quantite'] for p in lst.values())
+        return total_HT_Fact
+        
         
