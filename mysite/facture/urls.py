@@ -4,23 +4,25 @@ from django.contrib import admin
 from django.urls import path
 from . import views
 
-from .views import facture, client, prestataire
+# from .views import facture, client, prestataire
 from .views import FactureView, PrestataireView, ClientView
 from .views import UpdateView, DeleteView 
-from .views import FactureCreate, FactureView, FactureUpdate, FactureDelete
-from .views import HelloPDFView
+from .views import FactureCreate, FactureView, FactureUpdate, FactureDelete, FactureSearchList, facture_create
+# from .views import HelloPDFView
 
 urlpatterns = [
     path ('facture/', views.FactureCreate.as_view(), name='facture_form'),
-    path ('facture_list/', views.facture, name='facture_list'),
+    path('facture2/', views.facture_create, name='facture2'),
+    path ('facture_list/', views.FactureSearchList.as_view(), name='facture_list'),
     path ('facture_detail/<int:pk>',views.FactureView.as_view(), name='facture_detail'),
     path ('facture_update_form/<int:pk>',views.FactureUpdate.as_view(), name='facture_update_form'),
     path ('facture_check_delete/<int:pk>',views.FactureDelete.as_view(), name='facture_check_delete'),
-
+    path ('pdf/<int:Facture_id>', views.Facture_PDF, name = 'pdf'),
+    path ('pdf2/<int:Facture_id>', views.Facture_PDF2, name = 'pdf2'),
    
     
-    path ('hello/',views.HelloPDFView.as_view(), name='hello'),
-    path ('facture_detail_PDF/<int:pk>',views.HelloPDFView.as_view(), name='facture_detail_PDF'),
+    # path ('hello/',views.HelloPDFView.as_view(), name='hello'),
+    # path ('facture_detail_PDF/<int:pk>',views.HelloPDFView.as_view(), name='facture_detail_PDF'),
 
     path ('client/', views.ClientCreate.as_view(), name='client_form'),
     path ('client_list/', views.client, name='client_list'),
@@ -37,5 +39,5 @@ urlpatterns = [
     path ('prestataire_update_form/<int:pk>',views.PrestataireUpdate.as_view(), name='prestataire_update_form'),
     path ('prestataire_check_delete/<int:pk>',views.PrestataireDelete.as_view(), name='prestataire_check_delete'),
 
-
+   
 ]

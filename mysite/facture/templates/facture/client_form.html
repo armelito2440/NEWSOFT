@@ -1,6 +1,7 @@
 {% extends 'baseSocle.html' %}
-{% load crispy_forms_tags %}
+{% comment %} {% load crispy_forms_tags %} {% endcomment %}
 
+{% load bootstrap3 %}
 {% block content%}
 <!-- container -->
 	<div class="container">
@@ -26,8 +27,8 @@
 
 				<form method="post">
 					{% csrf_token %}
-					{{ form|crispy }}
-
+					{% comment %} {{ form|crispy }} {% endcomment %}
+					{% bootstrap_form form %} 
 					<hr>
 
 					<div class="col-lg-4 text-right">

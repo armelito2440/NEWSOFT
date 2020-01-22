@@ -1,6 +1,6 @@
 {% extends 'baseSocle.html' %}
-{% load crispy_forms_tags %}
-
+{% comment %} {% load crispy_forms_tags %} {% endcomment %}
+{% load bootstrap3 %}
 {% block content%}
 
 <!-- container -->
@@ -27,8 +27,8 @@
 				<form enctype="multipart/form-data" method="POST" action="">
 
 					{% csrf_token %}
-					{{ form|crispy }}
-
+					{% comment %} {{ form|crispy }} {% endcomment %}
+					{% bootstrap_form form %} 
 				<div class="col-lg-4 text-right">
 					<button class="btn btn-action" type="submit">Valider</button>
 				</div>

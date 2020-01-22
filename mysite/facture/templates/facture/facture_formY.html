@@ -1,0 +1,68 @@
+{% comment %} {% extends 'baseSocle.html' %} {% endcomment %}
+ {% load crispy_forms_tags %}
+{% load static %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{{ form.media }}
+{{ facture_form.media }}
+
+<html>
+{% block content%}
+
+
+<body>
+
+	<div class="container">
+
+		<ol class="breadcrumb">
+			<li><a href="/">Accueil</a></li>
+			<li class="active">Création Facture</li>
+		</ol>
+
+		<div > <!-- class="row enlevé-->
+				<header class="page-header">
+					<h1 class="page-title"></h1>
+                    <h1>CREER / EDITER / MODIFIER UNE FACTURE</h1>
+				</header>
+
+                    <br>
+                    <br>
+				<div>	
+				<form method="post">
+					
+					{% bootstrap_form form %}
+					<h4>PRESTATIONS:</h4>
+					<div class="input-group ">
+                        <div id="supp_form" >
+                            <div id="formset" >
+						        {{ formset }}
+                            </div>
+                        </div>
+					</div>		
+                    <div class="input-group-append">
+							<button type="button" class="btn btn-success formset_add">+</button>
+					</div>
+					<div class="col-lg-4 text-right">
+						<button class="btn btn-action" type="submit">Valider</button><br><br><br>
+					</div>
+				
+				</form>
+					<div class="col-lg-4 text-right">
+						<a class="dropdown-item text-center" href="/facture_list/"><button class="btn btn-default" type="submit">Annuler</button>
+					</div>
+					<div class="col-lg-4 text-right">
+						<a class="dropdown-item text-center" href="/"><button class="btn btn-default" type="submit">Accueil</button>
+					</div>	
+				</div>
+				
+		</div>
+	</div>
+    <script type="text/javascript"  src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/clone.js'%}">
+       
+    </script>
+{% endblock content%}
+						
+
+</html>

@@ -1,13 +1,15 @@
 {% comment %} {% extends 'baseSocle.html' %} {% endcomment %}
+{% comment %} {% load crispy_forms_tags %} {% endcomment %}
 
-{% load crispy_forms_tags %}
-
-{% load bootstrap3 %}
+{% load bootstrap4 %}
 {% bootstrap_css %}
-{% bootstrap_javascript jquery='full' %} 
+{% bootstrap_javascript jquery='full' %}
 {{ form.media }}
 
 {% block content%}
+
+
+
 
 	<div class="container">
 
@@ -16,7 +18,7 @@
 			<li class="active">Création Facture</li>
 		</ol>
 
-		<div class="row">
+		<div > <!-- class="row enlevé-->
 
             <!-- Article main content -->
 
@@ -29,27 +31,36 @@
 
                     <br>
                     <br>
-
+				<div>	
 				<form method="post">
 					{% csrf_token %}
-					{% comment %} {{ form|crispy }} {% endcomment %}
-					{% bootstrap_form form %} 
-					<hr>
-
-					<div class="col-lg-4 text-right">
+					{% bootstrap_form form %}
+					
+				
+				
+				
+				<div class="col-lg-4 text-right">
 
 
 					<button class="btn btn-action" type="submit">Valider</button><br><br><br>
-					</div>
+					
+				</div>
+				
 				</form>
 				<div class="col-lg-4 text-right">
 		            <a class="dropdown-item text-center" href="/facture_list/"><button class="btn btn-default" type="submit">Annuler</button>
             	</div>
                 <div class="col-lg-4 text-right">
 		            <a class="dropdown-item text-center" href="/"><button class="btn btn-default" type="submit">Accueil</button>
-            	</div>
+            	</div>	
+				</div>
+				<div>
+				
+				
+				
 		</div>
 	</div>
-	
+
 {% endblock content%}
+
 

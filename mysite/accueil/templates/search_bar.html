@@ -3,11 +3,46 @@
 	
 {% block content%}
 
-<nav class="navbar navbar-light bg-light">
-  <form class="form-inline">
+<!-- ENTETE -->
+<div class="container">
+
+  <ol class="breadcrumb">
+    <li><a href="/">Accueil</a></li>
+    <li class="active">Liste facture</li>
+  </ol>
+
+  <div class="row">
+
+          <!-- Article main content -->
+    <article class="col-sm-8 maincontent">
+      <header class="page-header">
+        <h1 class="page-title"></h1>
+
+
+        <h1>EFFECTUER UNE RECHERCHE</h1>
+
+      </header>
+      <br>
+              <br>
+
+      <a href="../facture_list/#recherche">recherche</a>
+
+  <form class="form-inline" action="" method="GET">
+    <h3>Vous pouvez effectuer une recherche selon les critères de votre choix : </h3>
+   
+        <br>
+        <button class="btn" style="float:right" type="submit">Recherche</button>
+        <p>&nbsp;</p>
+        <br>
+        </fieldset>
+    </form>
+
+  <!-- <!-- <form class="form-inline">
     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-  </form>
-</nav>
+  </form> -->
 
+</article>
+</div>
+</div>
 {% endblock content%}

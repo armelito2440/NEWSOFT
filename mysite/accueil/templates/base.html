@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head>
+<!-- <head>
     {% comment %} <title>{{ title|default:"" }}</title> {% endcomment %}
     <title>{{ object.ref_fact|date:"yW" }} - {{ object.client.nom_societe }}</title>
     {% block style_base %}
@@ -33,12 +33,12 @@
                         margin-right: 1cm;
                         height: 1cm;
                     }
-                }
+                
             </style>
         {%endblock%}
         {% block extra_style %}{% endblock %}
     {% endblock %}
-</head>
+</head> -->
 <body>
     <div>
         {%block page_header%}
@@ -50,9 +50,7 @@
 
     <div id="page-footer">
         {%block page_foot%}
-            {% comment %}
-                <pdf:pagenumber />
-            {% endcomment %}
+           
         {%endblock%}
     </div>
 </body>

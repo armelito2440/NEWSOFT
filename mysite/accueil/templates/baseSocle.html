@@ -1,5 +1,11 @@
 {% load static %}
+ 
+{% load crispy_forms_tags %}
 
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %} 
+{{ form.media }} 
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -8,9 +14,9 @@
 	<meta name="viewport"    content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="Gestion de Facturation Nouveau Soft">
 	<title>Nouveau Soft - outil de Gestion de Facture</title>
+
 	<title>{{ object.ref_fact|date:"yW" }} - {{ object.client.nom_societe }}</title>
 	<link rel="stylesheet" media="screen" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
-
 	<link rel="stylesheet" href="/static/css/bootstrap.min.css">
 	<link rel="stylesheet" href="/static/css/font-awesome.min.css">
 
@@ -43,18 +49,9 @@
 <div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav pull-right">
 					<li class="active"><a href="/">ACCUEIL</a></li>
-					<li class="text-center"><a href="../facture_list">FACTURE </a></li>
-					<li><a href="../client_list">CLIENTS</a></li>
-					<li><a href="/index">CONTACT</a></li>
-
-					<!--MENU DEROULANT NON ACTIF POUR LE MOMENT-->
-					 <li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">PARAMETRES<b class="caret"></b></a>
-						<ul class="dropdown-menu">
-							<li><a class="dropdown-item text-center" href="/prestataire_list"> LISTE PRESTATAIRES</a></li>
-							<li class="active text-center"><a href="../prestataire">CREER PRESTATAIRE</a></li>
-						</ul>
-					</li>
+					<li class="text-center"><a href="../facture_list">FACTURE</a></li>
+					<li><a href="../client_list">CLIENT</a></li>
+					<li><a href="../prestataire_list">PRESTATAIRE</a></li>
 
 					{% if user.is_authenticated %}
 					<li><a class="btn roll-text" href="/logout">DECONNEXION</a></li>
@@ -140,7 +137,7 @@
 					<div class="col-md-6 widget">
 						<div class="widget-body">
 							<p class="text-right">
-								Copyright &copy; 2019, nouveauSoft - Conçu par  <a href="#" rel="designer">Caramel</a>
+								Copyright &copy; 2019, nouveauSoft - Conçu par  <a href="https://cv-armel.000webhostapp.com/" target="_blank rel="designer">Caramel</a>
 							</p>
 						</div>
 					</div>
@@ -150,7 +147,7 @@
 		</div>
 
 	</footer>
-{% comment %} {% comment %} <script type="text/javascript" src="http://nouveausoft.com/wp-content/plugins/cherry-socialize/cherry-framework/modules/cherry-post-formats-api/assets/js/min/cherry-post-formats.min.js?ver=1.5.8"></script> {% endcomment %}
+<script type="text/javascript" src="http://nouveausoft.com/wp-content/plugins/cherry-socialize/cherry-framework/modules/cherry-post-formats-api/assets/js/min/cherry-post-formats.min.js?ver=1.5.8"></script> 
 <script type="text/javascript" src="http://nouveausoft.com/wp-content/plugins/sassy-social-share/public/js/sassy-social-share-public.js?ver=3.2.17"></script>
 
 	<!-- JavaScript libs are placed at the end of the document so the pages load faster -->

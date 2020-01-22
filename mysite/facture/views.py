@@ -6,28 +6,36 @@ from django.views.generic import View
 from django.utils import timezone
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
+from django.template.loader import render_to_string
 
-#from weasyprint import HTML
+#from weasyprint import HTML, CSS
 from django.conf import settings
-from easy_pdf.views import PDFTemplateView
 
-from xhtml2pdf import pisa
 from django.template.loader import get_template
 from django.template import Context
 
-from .forms import PrestataireForm, ClientForm, FactureForm
+from .forms import PrestataireForm, ClientForm, FactureForm, PrestToFact
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.detail import DetailView
+from django.forms import modelformset_factory, inlineformset_factory
 
 from bootstrap_datepicker_plus import DatePickerInput
+import weasyprint
+from io import BytesIO
+from weasyprint import HTML, CSS
 
-from facture.models import Facture
+# Ajout pour recherche
+# Nécessite installation django-search-views
+from search_views.search import SearchListView
+from search_views.filters import BaseFilter
+from .forms import *
+# fin ajout
+
+
 from django.urls import reverse_lazy
 
-from .models import Prestataire
-from .models import Client
-from .models import Facture
-# from .models import Image
+from .models import *
+
 
 
 
@@ -44,34 +52,90 @@ def client(request):
                   template_name="client_list.html",
                   context={"clients": Client.objects.all})
 
-@login_required
-def facture(request):
-    return render(request=request,
-                  template_name="facture_list.html",
-                  # ordering = [-Facture.ref_fact],
-                  # https://simpleisbetterthancomplex.com/article/2017/03/21/class-based-views-vs-function-based-views.html
-                  context={"factures": Facture.objects.all})
 
 
+class FactureFilters(BaseFilter):
+    search_fields = {
+        'search_text_client': ['client__nom_societe'],
+        'search_text_prestataire': ['prestataire__nom'],
+        'search_date_facture_gt': {'operator': '__gte', 'fields': ['date_debut']},
+        'search_date_facture_lt': {'operator': '__lte', 'fields': ['date_debut']},
+    }
 
 
+class FactureSearchList(SearchListView):
+    model = Facture
+    template_name = "facture_list.html"
+    form_class = FactureSearchForm
+    filter_class = FactureFilters
+
+
+def Facture_PDF(request, Facture_id):
+   
+    context = Facture.pourPDF(request, Facture_id)
+
+    html = render_to_string('facture/facture_detail_PDF.html',
+                            context)
+    response = HttpResponse(content_type = 'application/PDF')
+    response['Content-Disposition'] = 'filename="facture_{}.pdf"'.format(Facture_id)
+    weasyprint.HTML(string=html).write_pdf(response)
+    return response
+
+def Facture_PDF2(request, Facture_id):
+       
+    context = Facture.pourPDF(request, Facture_id)
+    template = 'facture/facture_detail.html'
+
+    return render(request, template, context)
 
 
 """CREATION FICHE FACTURE ET AFFICHAGE SUCCESS"""
 
 class FactureCreate(CreateView):
     model = Facture
-    #fields = '__all__'
     form_class = FactureForm
+    #fields = '__all__'
+    template_name = 'facture/facture_form.html'
+    success_url = None
 
     def get_form(self):
         form = super().get_form()
-        form.fields['date_debut'].widget = DatePickerInput().start_of('facture date')
-        form.fields['date_echeance'].widget = DatePickerInput().end_of('facture date')
-        form.fields['date_prestation'].widget = DatePickerInput().end_of('facture date')
+        form.fields['date_debut'].widget = DatePickerInput(format='%Y-%m-%d').start_of('facture date')
+        form.fields['date_echeance'].widget = DatePickerInput(format='%Y-%m-%d').end_of('facture date')
+        form.fields['date_prestation'].widget = DatePickerInput(format='%Y-%m-%d').end_of('facture date')
         
         return form
-      
+
+
+def facture_create(request):
+    facture = Facture()
+
+    facture_form = FactureForm(instance=facture)
+
+    FactureFormSet = inlineformset_factory(Facture, 
+        PrestToFact, fields=('__all__'), 
+        can_delete=True, extra=1)
+    formset = FactureFormSet(instance=facture)
+
+    if request.method == "POST":
+        facture_form = FactureForm(request.POST)
+
+        formset = FactureForm(request.POST)
+
+        if facture_form.is_valid():
+            created_facture = facture_form.save(commit=False)
+            formset = FactureFormSet(request.POST, instance=created_facture)
+
+            if formset.is_valid():
+                created_facture.save()
+                formset.save()
+                return HttpResponseRedirect(created_facture.get_absolute_url())
+    print(formset)
+    return render(request, template_name="facture/facture2.html", context={
+        "facture_form":facture_form,
+        "formset": formset,
+    })            
+  
 
 class FactureView(DetailView):
     model = Facture
@@ -138,19 +202,3 @@ class PrestataireDelete(DeleteView):
     model = Prestataire
     success_url = reverse_lazy('prestataire_list')
 
-
-
-""" CREATION DU MODELE PDF"""
-
-class HelloPDFView(PDFTemplateView):
-    template_name = 'facture_detail_PDF.html'
-    base_url = 'file://' + settings.STATIC_ROOT
-    download_filename = 'hello.pdf'
-
-    def get_context_data(self, **kwargs):
-        return super(HelloPDFView, self).get_context_data(
-            pagesize='A4',
-            title='Hi there!',
-
-            **kwargs
-       )

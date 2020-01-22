@@ -25,7 +25,6 @@ urlpatterns = [
     path('', include('accueil.urls')),
     path('', include('inscription.urls')),
     path('', include('facture.urls')),
-    path('', include('sendemail.urls')),
-    path('', include('CALENDAR.urls')),
-] + static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)
+    
+    ] + static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)
     

@@ -1,10 +1,10 @@
 {% extends 'baseSocle.html' %}
- {% load crispy_forms_tags %}
+{% load bootstrap3 %}
+
+
 
 {% block content%}
-
-
-<!-- container -->
+<!-- ENTETE -->
 	<div class="container">
 
 		<ol class="breadcrumb">
@@ -21,9 +21,14 @@
 
 
 					<h1>LISTE CLIENT</h1>
-
+					
+				
 				</header>
 				<br>
+				<div class="col-lg-4 text-right">
+					<a class="dropdown-item text-center"  href="/client/"><button class="btn btn-default" type="submit">Créer un client</button></a>
+				</div>
+				<p>&nbsp;</p>
                 <br>
 
 <!--LISTE CLIENTS-->
@@ -31,7 +36,7 @@
  {% for c in clients %}
 <h1>{{ client.client}}</h1>
 
-<h3><a href="{% url 'client_detail' c.id %}">{{ c.nom_societe }}</a><a href="{% url 'client_update_form' c.id %}"><p>EDITER - </a></h3><p><a href="{% url 'client_check_delete' c.id %}">EFFACER</a></p><br><br>
+<h3><a href="{% url 'client_detail' c.id %}">{{ c.nom_societe }}</a><a href="{% url 'client_update_form' c.id %}"></h3><p>EDITER - </a></h3><a href="{% url 'client_check_delete' c.id %}">EFFACER</a></p><br><br>
     <p>Contact client : {{ c.nom_contact_client }}<p>
     <p>Adresse : {{ c.adresse }}  {{ c.code_postal }} {{ c.ville }}</p>
 	<p>mail : {{ c.email }}</p>
@@ -40,16 +45,16 @@
     <p>{{ c.rib_iban }}</p>
     <br>
 {% endfor %}
-
+	<br><br>
 	<div class="col-lg-4 text-right">
-		<a class="dropdown-item text-center" href="/"><button class="btn btn-default" type="submit">Accueil</button>
+		<a class="dropdown-item text-center" href="/"><button class="btn btn-default" type="submit">Accueil</button></a>
 	</div>
 
     <div class="col-lg-4 text-right">
-		<a class="dropdown-item text-center" href="/client/"><button class="btn btn-default" type="submit">Créer un client</button>
+		<a class="dropdown-item text-center" href="/client/"><button class="btn btn-default" type="submit">Créer un client</button></a>
 	</div>
 
 
 		</div>
-	</div>	<!-- /container -->
-        {% endblock %}
+	</div>	
+{% endblock content%}

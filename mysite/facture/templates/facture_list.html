@@ -1,5 +1,6 @@
-{% extends 'baseSocle.html' %}
-{% load crispy_forms_tags %}
+{% extends 'baseSocle.html' %} 
+{% load bootstrap3 %}
+
 
 {% block content%}
 
@@ -24,11 +25,28 @@
 				</header>
 				<br>
                 <br>
-
+        
 <!--LISTE FACTURE-->
+<div class="col-lg-4 text-right">
+    <a class="dropdown-item text-center" href="/facture/"><button class="btn btn-default" type="submit">Créer une facture</button></a>
+</div>
+<p>&nbsp;</p>
+<br>
+<br>
 
+<div id=recherche>
+<form class="form-inline" action="" method="GET">
+    <h2>EFFECTUER UNE RECHERCHE :</h2>
+        {{ form }}
+        <br>
+        <button class="btn" style="float:right" type="submit">Recherche</button>
+        <p>&nbsp;</p>
+        <br>
+        </fieldset>
+    </form>
+</div>
 
-{% for f in factures %}
+{% for f in object_list %}
 <h1>{{ f.facture}}</h1>
 
     <h3><a href="{% url 'facture_detail' f.id %}">FACTURE {{ f.ref_fact|date:"yW" }} - {{ f.client.nom_societe }}</a> <a href="{% url 'facture_update_form' f.id %}"></h3><p>EDITER - </a><a href="{% url 'facture_check_delete' f.id %}"> EFFACER</a><br><br></p>
@@ -37,6 +55,8 @@
     <p>{{ f.date_debut }}</p>
     <p>{{ f.prestation }}</p>
     <p>{{ f.date_echeance }}</p>
+
+    <p><a href="{% url 'pdf' f.id %}">Afficher PDF</a></p>
 {% endfor %}
 
 <!-- AFFICHAGE PRESTATION -->
@@ -56,15 +76,15 @@
 {% endfor %}
     <br><br>
 	<div class="col-lg-4 text-right">
-		<a class="dropdown-item text-center" href="/"><button class="btn btn-default" type="submit">Accueil</button>
+		<a class="dropdown-item text-center" href="/"><button class="btn btn-default" type="submit">Accueil</button></a>
 	</div>
 
     <div class="col-lg-4 text-right">
-		<a class="dropdown-item text-center" href="/facture/"><button class="btn btn-default" type="submit">Créer une facture</button>
+		<a class="dropdown-item text-center" href="/facture/"><button class="btn btn-default" type="submit">Créer une facture</button></a>
 	</div>
 
-		</div>
-	</div>	<!-- /container -->
+        </div>
+	</div>	
 
 
 {% endblock content%}
